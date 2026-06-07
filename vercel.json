@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "/analizador-dental.html",
+      "src": "/un-beso.html",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/",
-      "dest": "/analizador-dental.html"
+      "dest": "/un-beso.html"
     }
   ]
 }
