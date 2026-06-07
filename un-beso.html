@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>¿Quieres un beso?</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #ffd1ff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  h1 {
+    font-size: clamp(1.8rem, 8vw, 3.2rem);
+    color: #c2185b;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 8px rgba(255,255,255,.5);
+  }
+  .emoji {
+    font-size: clamp(3.5rem, 18vw, 6rem);
+    margin-bottom: 24px;
+    animation: float 2.5s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-14px) rotate(3deg); }
+  }
+  .botones {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+  button {
+    border: none;
+    border-radius: 50px;
+    padding: 16px 40px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,.18);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  button:active { transform: scale(.95); }
+  #si, .es-si {
+    background: linear-gradient(135deg, #ff5e7e, #ff2d55);
+    color: #fff;
+  }
+  #no {
+    background: #fff;
+    color: #888;
+  }
+  /* cuando el si se vuelve "fugitivo" */
+  #si.fugitivo {
+    position: absolute;
+    z-index: 10;
+    transition: top .25s ease, left .25s ease;
+  }
+  .final {
+    font-size: clamp(1.4rem, 6vw, 2.2rem);
+    color: #c2185b;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .final .small { display:block; font-size: .7em; font-weight: 500; margin-top: 8px; color:#9b2c5e;}
+
+  /* corazones cayendo */
+  .corazon {
+    position: fixed;
+    top: -40px;
+    font-size: 28px;
+    pointer-events: none;
+    z-index: 5;
+    animation: caer linear forwards;
+  }
+  @keyframes caer {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+  .final-pop { animation: pop .5s ease; }
+  @keyframes pop {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="emoji" id="emoji">😘</div>
+    <h1 id="titulo">¿Quieres un beso?</h1>
+    <div class="botones" id="botones">
+      <button id="si">Sí 💕</button>
+      <button id="no">No</button>
+    </div>
+  </div>
+
+<script>
+  const si = document.getElementById('si');
+  const no = document.getElementById('no');
+  const card = document.getElementById('card');
+  const titulo = document.getElementById('titulo');
+  const emoji = document.getElementById('emoji');
+  const botones = document.getElementById('botones');
+
+  let escapadas = 0;
+  const MAX = 3; // se escapa 3 veces
+
+  // muestra el final y quita los botones
+  function rendirse() {
+    if (botones) botones.remove();
+    emoji.textContent = '💋';
+    titulo.innerHTML = '<div class="final final-pop">bueno bueno... pero solo 1 💋<span class="small">😚</span></div>';
+    lluviaCorazones();
+  }
+
+  // lluvia de corazones 💕
+  function lluviaCorazones() {
+    const emojis = ['💕','💖','❤️','💗','😍','😘','💋','💞'];
+    let lanzados = 0;
+    const total = 60;
+    const intervalo = setInterval(() => {
+      const c = document.createElement('div');
+      c.className = 'corazon';
+      c.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.fontSize = (20 + Math.random() * 26) + 'px';
+      const dur = 2.5 + Math.random() * 2.5;
+      c.style.animationDuration = dur + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), dur * 1000);
+      lanzados++;
+      if (lanzados >= total) clearInterval(intervalo);
+    }, 120);
+  }
+
+  // mueve cualquier botón a una posición random
+  function moverBoton(btn) {
+    btn.classList.add('fugitivo');
+    const w = btn.offsetWidth;
+    const h = btn.offsetHeight;
+    const margen = 16;
+    const maxX = window.innerWidth - w - margen;
+    const maxY = window.innerHeight - h - margen;
+    const x = Math.max(margen, Math.random() * maxX);
+    const y = Math.max(margen, Math.random() * maxY);
+    btn.style.left = x + 'px';
+    btn.style.top = y + 'px';
+  }
+
+  function intentarSi() {
+    if (escapadas < MAX) {
+      escapadas++;
+      moverBoton(si);
+    } else {
+      rendirse();
+    }
+  }
+
+  // --- botón SÍ original ---
+  si.addEventListener('mouseenter', () => { if (escapadas < MAX) moverBoton(si); });
+  si.addEventListener('click', (e) => { e.preventDefault(); intentarSi(); });
+  si.addEventListener('touchstart', (e) => { e.preventDefault(); intentarSi(); }, {passive:false});
+
+  // --- botón NO: se transforma en otro SÍ, se escapa y también se rinde ---
+  let noTransformado = false;
+  let escapadasNo = 0;
+  function activarNoComoSi() {
+    if (!noTransformado) {
+      // primera vez: se convierte en Sí (no se mueve aún, da chance de tocarlo)
+      noTransformado = true;
+      no.textContent = 'Sí 💕';
+      no.classList.add('es-si');    // hereda el estilo rojo del sí
+      return;
+    }
+    if (escapadasNo < MAX) {
+      escapadasNo++;
+      moverBoton(no);
+    } else {
+      rendirse();
+    }
+  }
+  no.addEventListener('mouseenter', () => { if (noTransformado && escapadasNo < MAX) moverBoton(no); });
+  no.addEventListener('click', (e) => { e.preventDefault(); activarNoComoSi(); });
+  no.addEventListener('touchstart', (e) => { e.preventDefault(); activarNoComoSi(); }, {passive:false});
+
+  // reubicar si cambia el tamaño de pantalla
+  window.addEventListener('resize', () => {
+    if (si.classList.contains('fugitivo') && escapadas < MAX) moverBoton(si);
+    if (noTransformado && escapadasNo < MAX) moverBoton(no);
+  });
+</script>
+</body>
+</html>
