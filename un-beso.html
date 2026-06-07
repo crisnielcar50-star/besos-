@@ -82,6 +82,16 @@
     line-height: 1.4;
   }
   .final .small { display:block; font-size: .7em; font-weight: 500; margin-top: 8px; color:#9b2c5e;}
+  .final .dedicatoria {
+    display: block;
+    font-size: clamp(.85rem, 3.5vw, 1.05rem);
+    font-weight: 500;
+    margin-top: 22px;
+    color: #b03a6b;
+    line-height: 1.5;
+    max-width: 520px;
+  }
+  .final .dedicatoria b { color: #c2185b; font-size: 1.15em; }
 
   /* corazones cayendo */
   .corazon {
@@ -129,7 +139,7 @@
   function rendirse() {
     if (botones) botones.remove();
     emoji.textContent = '💋';
-    titulo.innerHTML = '<div class="final final-pop">bueno bueno... pero solo 1 💋<span class="small">😚</span></div>';
+    titulo.innerHTML = '<div class="final final-pop">bueno bueno... pero solo 1 💋<span class="small">😚</span><span class="dedicatoria">para que no creas que usaré esta app con nadie más,<br>dejo tu nombre aquí: <b>Yumi</b> 💖</span></div>';
     lluviaCorazones();
   }
 
